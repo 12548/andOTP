@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="GoogleAppIndexingWarning"
     android:installLocation="auto"
-    package="org.shadowice.flocke.andotp">
+>
 
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" /> <!-- Needed to support SDK below 24, see build.gradle -->
 
