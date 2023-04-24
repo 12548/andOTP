@@ -23,17 +23,16 @@
 
 package org.shadowice.flocke.andotp.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
+import androidx.appcompat.app.AppCompatActivity;
 import org.shadowice.flocke.andotp.Utilities.DatabaseHelper;
 import org.shadowice.flocke.andotp.Utilities.KeyStoreHelper;
 import org.shadowice.flocke.andotp.Utilities.Settings;
 
 import java.util.Set;
 
-public class PanicResponderActivity extends Activity {
+public class PanicResponderActivity extends AppCompatActivity {
     public static final String PANIC_TRIGGER_ACTION = "info.guardianproject.panic.action.TRIGGER";
 
     @Override

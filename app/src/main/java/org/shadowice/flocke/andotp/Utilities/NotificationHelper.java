@@ -23,6 +23,7 @@
 
 package org.shadowice.flocke.andotp.Utilities;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -42,7 +43,7 @@ public class NotificationHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(channelId(channel), context.getString(R.string.app_name), NotificationManager.IMPORTANCE_DEFAULT);
 
-            switch(channel) {
+            switch (channel) {
                 case BACKUP_FAILED:
                     notificationChannel.setName(context.getString(R.string.notification_channel_name_backup_failed));
                     notificationChannel.setDescription(context.getString(R.string.notification_channel_desc_backup_failed));
@@ -74,12 +75,12 @@ public class NotificationHelper {
         notify(context, channel, resIdTitle, context.getText(resIdBody).toString());
     }
 
-    public static void notify(Context context, Constants.NotificationChannel channel , int resIdTitle, String resBody) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, null)
+    public static void notify(Context context, Constants.NotificationChannel channel, int resIdTitle, String resBody) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(context.getText(resIdTitle))
                 .setStyle(new NotificationCompat.BigTextStyle()
-                    .bigText(resBody));
+                        .bigText(resBody));
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             builder.setPriority(NotificationCompat.PRIORITY_HIGH);

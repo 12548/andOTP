@@ -1,14 +1,12 @@
 package org.shadowice.flocke.andotp.Activities;
 
-import android.app.Fragment;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
-
 import org.shadowice.flocke.andotp.Tasks.UiBasedBackgroundTask;
 
 public abstract class BackgroundTaskActivity<Result> extends BaseActivity {
@@ -89,7 +87,7 @@ public abstract class BackgroundTaskActivity<Result> extends BaseActivity {
 
             if (taskFragment == null) {
                 taskFragment = new TaskFragment<>();
-                getFragmentManager()
+                getSupportFragmentManager()
                         .beginTransaction()
                         .add(taskFragment, TAG_TASK_FRAGMENT)
                         .commit();
@@ -110,7 +108,7 @@ public abstract class BackgroundTaskActivity<Result> extends BaseActivity {
         TaskFragment<Result> taskFragment = findTaskFragment();
 
         if (taskFragment != null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .remove(taskFragment)
                     .commit();
         }
@@ -122,7 +120,7 @@ public abstract class BackgroundTaskActivity<Result> extends BaseActivity {
         if (taskFragment != null) {
             if (taskFragment.isCanceled()) {
                 // The task was canceled, so remove the task fragment
-                getFragmentManager().beginTransaction()
+                getSupportFragmentManager().beginTransaction()
                         .remove(taskFragment)
                         .commit();
 
@@ -142,7 +140,7 @@ public abstract class BackgroundTaskActivity<Result> extends BaseActivity {
     @Nullable
     @SuppressWarnings("unchecked")
     private TaskFragment<Result> findTaskFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(TAG_TASK_FRAGMENT);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_TASK_FRAGMENT);
 
         if (fragment instanceof TaskFragment)
             return (TaskFragment<Result>) fragment;

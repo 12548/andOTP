@@ -22,26 +22,17 @@
 
 package org.shadowice.flocke.andotp.Dialogs;
 
-import android.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-
+import android.widget.*;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.res.ResourcesCompat;
 import com.github.aakira.expandablelayout.ExpandableLayoutListenerAdapter;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
-
 import org.shadowice.flocke.andotp.Activities.MainActivity;
 import org.shadowice.flocke.andotp.Database.Entry;
 import org.shadowice.flocke.andotp.R;
@@ -129,7 +120,7 @@ public class ManualEntryDialog {
                         digitsInput.setText(String.format(Locale.US, "%d", TokenCalculator.TOTP_DEFAULT_DIGITS));
 
                     algorithmInput.setEnabled(isNewEntry);
-                }else if (type == Entry.OTPType.MOTP) {
+                } else if (type == Entry.OTPType.MOTP) {
                     counterLayout.setVisibility(View.GONE);
                     periodLayout.setVisibility(View.VISIBLE);
 
@@ -147,7 +138,7 @@ public class ManualEntryDialog {
 
         List<String> allTags = adapter.getTags();
         HashMap<String, Boolean> tagsHashMap = new HashMap<>();
-        for(String tag: allTags) {
+        for (String tag : allTags) {
             tagsHashMap.put(tag, false);
         }
         final TagsAdapter tagsAdapter = new TagsAdapter(callingActivity, tagsHashMap);
@@ -155,9 +146,9 @@ public class ManualEntryDialog {
         final Callable<?> tagsCallable = () -> {
             List<String> selectedTags = tagsAdapter.getActiveTags();
             StringBuilder stringBuilder = new StringBuilder();
-            for(int j = 0; j < selectedTags.size(); j++) {
+            for (int j = 0; j < selectedTags.size(); j++) {
                 stringBuilder.append(selectedTags.get(j));
-                if(j < selectedTags.size() - 1) {
+                if (j < selectedTags.size() - 1) {
                     stringBuilder.append(", ");
                 }
             }
@@ -192,7 +183,8 @@ public class ManualEntryDialog {
         builder.setTitle(R.string.dialog_title_manual_entry)
                 .setView(inputView)
                 .setPositiveButton(R.string.button_save, null)
-                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {});
+                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+                });
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -201,7 +193,7 @@ public class ManualEntryDialog {
 
         positiveButton.setOnClickListener(view -> {
             //Replace spaces with empty characters
-            String secret = secretInput.getText().toString().replaceAll("\\s+","");
+            String secret = secretInput.getText().toString().replaceAll("\\s+", "");
             Entry.OTPType type = (Entry.OTPType) typeInput.getSelectedItem();
 
             if (!Entry.validateSecret(secret, type)) {
@@ -347,7 +339,7 @@ public class ManualEntryDialog {
             issuerInput.setText(oldEntry.getIssuer());
             labelInput.setText(oldEntry.getLabel());
             secretView.setText(oldEntry.getSecretEncoded());
-            digitsInput.setText(String.format(Locale.ENGLISH ,"%d", oldEntry.getDigits()));
+            digitsInput.setText(String.format(Locale.ENGLISH, "%d", oldEntry.getDigits()));
             algorithmInput.setSelection(algorithmAdapter.getPosition(oldEntry.getAlgorithm()));
 
             if (oldType == Entry.OTPType.TOTP || oldType == Entry.OTPType.STEAM) {
@@ -356,7 +348,7 @@ public class ManualEntryDialog {
                 counterInput.setText(String.format(Locale.ENGLISH, "%d", oldEntry.getCounter()));
             }
 
-            for(String tag: oldEntry.getTags()) {
+            for (String tag : oldEntry.getTags()) {
                 tagsAdapter.setTagState(tag, true);
             }
             try {

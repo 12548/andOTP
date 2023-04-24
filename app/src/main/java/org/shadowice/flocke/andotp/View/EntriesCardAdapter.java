@@ -23,7 +23,6 @@
 package org.shadowice.flocke.andotp.View;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,34 +30,20 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Looper;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.FrameLayout;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
+import android.view.*;
+import android.widget.*;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
-
 import org.shadowice.flocke.andotp.Activities.MainActivity;
 import org.shadowice.flocke.andotp.Database.Entry;
 import org.shadowice.flocke.andotp.Database.EntryList;
@@ -66,26 +51,19 @@ import org.shadowice.flocke.andotp.Dialogs.ManualEntryDialog;
 import org.shadowice.flocke.andotp.R;
 import org.shadowice.flocke.andotp.Tasks.BackupTaskResult;
 import org.shadowice.flocke.andotp.Tasks.EncryptedBackupTask;
-import org.shadowice.flocke.andotp.Utilities.BackupHelper;
-import org.shadowice.flocke.andotp.Utilities.Constants;
-import org.shadowice.flocke.andotp.Utilities.DatabaseHelper;
-import org.shadowice.flocke.andotp.Utilities.EntryThumbnail;
-import org.shadowice.flocke.andotp.Utilities.Settings;
-import org.shadowice.flocke.andotp.Utilities.Tools;
-import org.shadowice.flocke.andotp.Utilities.UIHelper;
+import org.shadowice.flocke.andotp.Utilities.*;
 import org.shadowice.flocke.andotp.View.ItemTouchHelper.ItemTouchHelperAdapter;
 
+import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import javax.crypto.SecretKey;
-
 import static org.shadowice.flocke.andotp.Utilities.Constants.SortMode;
 
 public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
-    implements ItemTouchHelperAdapter, Filterable {
+        implements ItemTouchHelperAdapter, Filterable {
     private final Context context;
     private final Handler taskHandler;
     private EntryFilter filter;
@@ -170,17 +148,17 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
         List<String> inUseTags = getTags();
 
         HashMap<String, Boolean> tagsHashMap = new HashMap<>();
-        for(String tag: tagsFilterAdapter.getTags()) {
-            if(inUseTags.contains(tag))
+        for (String tag : tagsFilterAdapter.getTags()) {
+            if (inUseTags.contains(tag))
                 tagsHashMap.put(tag, false);
         }
-        for(String tag: tagsFilterAdapter.getActiveTags()) {
-            if(inUseTags.contains(tag))
+        for (String tag : tagsFilterAdapter.getActiveTags()) {
+            if (inUseTags.contains(tag))
                 tagsHashMap.put(tag, true);
         }
-        for(String tag: getTags()) {
-            if(inUseTags.contains(tag))
-                if(!tagsHashMap.containsKey(tag))
+        for (String tag : getTags()) {
+            if (inUseTags.contains(tag))
+                if (!tagsHashMap.containsKey(tag))
                     tagsHashMap.put(tag, true);
         }
 
@@ -191,7 +169,7 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
     public void saveEntries(boolean auto_backup) {
         DatabaseHelper.saveDatabase(context, entries.getEntries(), encryptionKey);
 
-        if(auto_backup && BackupHelper.autoBackupType(context) == Constants.BackupType.ENCRYPTED) {
+        if (auto_backup && BackupHelper.autoBackupType(context) == Constants.BackupType.ENCRYPTED) {
             EncryptedBackupTask task = new EncryptedBackupTask(context, entries.getEntries(), settings.getBackupPasswordEnc(), null);
             task.setCallback(this::handleTaskResult);
 
@@ -234,7 +212,7 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
                 boolean color_changed = false;
 
                 // Check color change only if highlighting token feature is enabled and the entry is visible
-                if(settings.isHighlightTokenOptionEnabled())
+                if (settings.isHighlightTokenOptionEnabled())
                     color_changed = cardVisible && e.hasColorChanged();
 
                 change = change || item_changed || color_changed ||
@@ -253,7 +231,7 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
         if (!entry.isTimeBased())
             entry.updateOTP(false);
 
-        if(settings.isHighlightTokenOptionEnabled())
+        if (settings.isHighlightTokenOptionEnabled())
             entryViewHolder.updateColor(entry.getColor());
 
         entryViewHolder.updateValues(entry);
@@ -261,11 +239,12 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
         entryViewHolder.setLabelSize(settings.getLabelSize());
         entryViewHolder.setLabelScroll(settings.getLabelDisplay(), settings.getCardLayout());
 
-        if(settings.getThumbnailVisible())
+        if (settings.getThumbnailVisible())
             entryViewHolder.setThumbnailSize(settings.getThumbnailSize());
     }
 
-    @Override @NonNull
+    @Override
+    @NonNull
     public EntryViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         int cardLayout = R.layout.component_card_default;
 
@@ -379,7 +358,7 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
         Tools.copyToClipboard(context, text);
         updateLastUsedAndFrequency(position, getRealIndex(position));
         if (dropToBackground) {
-            ((MainActivity)context).moveTaskToBack(true);
+            ((MainActivity) context).moveTaskToBack(true);
         }
     }
 
@@ -410,7 +389,7 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
 
         realEntry.setCounter(counter);
         realEntry.updateOTP(false);
-        
+
         saveEntries(settings.getAutoBackupEncryptedFullEnabled());
     }
 
@@ -441,7 +420,7 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
         int marginMedium = context.getResources().getDimensionPixelSize(R.dimen.activity_margin_medium);
 
         final EditText input = new EditText(context);
-        input.setLayoutParams(new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        input.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         input.setText(String.format(Locale.ENGLISH, "%d", displayedEntries.get(pos).getCounter()));
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         input.setSingleLine();
@@ -464,7 +443,8 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
 
                     saveEntries(settings.getAutoBackupEncryptedFullEnabled());
                 })
-                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {})
+                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+                })
                 .create();
         addCounterValidationWatcher(input, dialog);
         dialog.show();
@@ -550,15 +530,17 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
         final ThumbnailSelectionAdapter thumbnailAdapter = new ThumbnailSelectionAdapter(context, entries.getEntry(realIndex).getIssuer(), entries.getEntry(realIndex).getLabel());
 
         final EditText input = new EditText(context);
-        input.setLayoutParams(new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        input.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         input.setSingleLine();
 
         input.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -594,7 +576,8 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
 
         final AlertDialog alert = builder.setTitle(R.string.menu_popup_change_image)
                 .setView(container)
-                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {})
+                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+                })
                 .create();
 
         grid.setOnItemClickListener((parent, view, position, id) -> {
@@ -625,8 +608,8 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
         int marginMedium = context.getResources().getDimensionPixelSize(R.dimen.activity_margin_medium);
 
         final EditText input = new EditText(context);
-        input.setLayoutParams(new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        input.setRawInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD  | InputType.TYPE_CLASS_NUMBER);
+        input.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        input.setRawInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD | InputType.TYPE_CLASS_NUMBER);
         input.setText(displayedEntries.get(pos).getPin());
         input.setSingleLine();
         input.requestFocus();
@@ -674,7 +657,8 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
                     entries.removeEntry(realIndex);
                     saveEntries(settings.getAutoBackupEncryptedFullEnabled());
                 })
-                .setNegativeButton(R.string.no, (dialogInterface, i) -> {})
+                .setNegativeButton(R.string.no, (dialogInterface, i) -> {
+                })
                 .show();
     }
 
@@ -697,7 +681,7 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
             Bitmap bitmap;
             try {
                 bitmap = new BarcodeEncoder().encodeBitmap(uri.toString(), BarcodeFormat.QR_CODE, 0, 0);
-            } catch(Exception ignored) {
+            } catch (Exception ignored) {
                 Toast.makeText(context, R.string.toast_qr_failed_to_generate, Toast.LENGTH_LONG).show();
                 return;
             }
@@ -711,7 +695,8 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
 
             new AlertDialog.Builder(context)
                     .setTitle(R.string.dialog_title_qr_code)
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {})
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    })
                     .setView(image)
                     .create()
                     .show();
@@ -726,9 +711,9 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
         MenuInflater inflate = popup.getMenuInflater();
         inflate.inflate(R.menu.menu_popup, popup.getMenu());
 
-        if (displayedEntries.get(pos).getType() == Entry.OTPType.MOTP){
-             MenuItem item = popup.getMenu().getItem(ESTABLISH_PIN_MENU_INDEX);
-             item.setVisible(true);
+        if (displayedEntries.get(pos).getType() == Entry.OTPType.MOTP) {
+            MenuItem item = popup.getMenu().getItem(ESTABLISH_PIN_MENU_INDEX);
+            item.setVisible(true);
         }
 
         popup.setOnMenuItemClickListener(item -> {
@@ -737,7 +722,7 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
             if (id == R.id.menu_popup_edit) {
                 ManualEntryDialog.show((MainActivity) context, settings, EntriesCardAdapter.this, entries.getEntry(getRealIndex(pos)), () -> saveAndRefresh(settings.getAutoBackupEncryptedFullEnabled(), pos));
                 return true;
-            } else if(id == R.id.menu_popup_changeImage) {
+            } else if (id == R.id.menu_popup_changeImage) {
                 changeThumbnail(pos);
                 return true;
             } else if (id == R.id.menu_popup_establishPin) {
@@ -812,6 +797,7 @@ public class EntriesCardAdapter extends RecyclerView.Adapter<EntryViewHolder>
 
     public interface Callback {
         void onMoveEventStart();
+
         void onMoveEventStop();
     }
 }

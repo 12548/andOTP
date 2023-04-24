@@ -22,11 +22,11 @@
 
 package org.shadowice.flocke.andotp.Utilities;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import androidx.appcompat.app.AlertDialog;
 
 public class UIHelper {
     public static void showGenericDialog(Context context, int titleId, int messageId) {
@@ -40,7 +40,7 @@ public class UIHelper {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if(onOk != null)
+                        if (onOk != null)
                             onOk.run();
                     }
                 })
@@ -48,14 +48,14 @@ public class UIHelper {
                 .show();
     }
 
-    public static void showKeyboard(Context context, View view){
-        showKeyboard(context,view,false);
+    public static void showKeyboard(Context context, View view) {
+        showKeyboard(context, view, false);
     }
 
     public static void showKeyboard(Context context, View view, Boolean showForced) {
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if(showForced)
+            if (showForced)
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
             else
                 imm.showSoftInput(view, 0);

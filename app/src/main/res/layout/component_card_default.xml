@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
@@ -10,9 +9,9 @@
     android:layout_marginBottom="@dimen/activity_margin_xsmall"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:foreground="?attr/selectableItemBackground"
     app:contentPadding="0dp"
-    style="?attr/cardStyle" >
+    style="?attr/cardStyle">
 
     <LinearLayout
         android:orientation="vertical"
@@ -39,7 +38,7 @@
                     android:layout_width="@dimen/card_thumbnail_size"
                     android:layout_height="@dimen/card_thumbnail_size"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher"
+                    app:srcCompat="@mipmap/ic_launcher"
                     tools:ignore="ContentDescription" />
 
             </FrameLayout>
@@ -58,7 +57,7 @@
                     android:paddingStart="@dimen/activity_margin"
                     android:paddingEnd="@dimen/activity_margin_small"
                     android:gravity="center_vertical"
-                    android:baselineAligned="false" >
+                    android:baselineAligned="false">
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -68,7 +67,7 @@
 
                         <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content">
 
                             <LinearLayout
                                 android:id="@+id/valueLayout"
@@ -182,7 +181,7 @@
                             android:padding="@dimen/activity_horizontal_margin"
                             android:gravity="center"
                             android:visibility="visible"
-                            android:orientation="vertical" >
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -203,7 +202,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:padding="@dimen/activity_margin_small"
-                            android:background="?android:attr/selectableItemBackground"
+                            android:background="?attr/selectableItemBackground"
                             android:contentDescription="@string/button_card_copy"
                             app:srcCompat="@drawable/ic_content_copy_gray" />
 
@@ -213,7 +212,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:padding="@dimen/activity_margin_small"
-                            android:background="?android:attr/selectableItemBackground"
+                            android:background="?attr/selectableItemBackground"
                             android:contentDescription="@string/button_card_options"
                             app:srcCompat="@drawable/ic_more_vert_gray" />
                     </LinearLayout>

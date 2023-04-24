@@ -33,40 +33,24 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
 import org.shadowice.flocke.andotp.R;
 import org.shadowice.flocke.andotp.Tasks.ChangeCredentialsTask;
-import org.shadowice.flocke.andotp.Utilities.ConfirmedPasswordTransformationHelper;
-import org.shadowice.flocke.andotp.Utilities.Constants;
-import org.shadowice.flocke.andotp.Utilities.EditorActionHelper;
-import org.shadowice.flocke.andotp.Utilities.EncryptionHelper;
-import org.shadowice.flocke.andotp.Utilities.Settings;
-import org.shadowice.flocke.andotp.Utilities.UIHelper;
+import org.shadowice.flocke.andotp.Utilities.*;
 
+import javax.crypto.SecretKey;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import javax.crypto.SecretKey;
 
 import static android.content.Context.KEYGUARD_SERVICE;
 import static org.shadowice.flocke.andotp.Utilities.Constants.AuthMethod;
 import static org.shadowice.flocke.andotp.Utilities.Constants.EncryptionType;
 
 public class CredentialsPreference extends DialogPreference
-    implements AdapterView.OnItemClickListener, View.OnClickListener, TextWatcher, TextView.OnEditorActionListener {
+        implements AdapterView.OnItemClickListener, View.OnClickListener, TextWatcher, TextView.OnEditorActionListener {
     public static final AuthMethod DEFAULT_VALUE = AuthMethod.NONE;
 
     private final List<String> entries;
@@ -134,7 +118,7 @@ public class CredentialsPreference extends DialogPreference
 
         int index = entryValues.indexOf(value);
         credentialsSelection.setSelection(index);
-        credentialsSelection.setItemChecked(index,true);
+        credentialsSelection.setItemChecked(index, true);
         credentialsSelection.setOnItemClickListener(this);
 
         credentialsLayout = view.findViewById(R.id.credentialsLayout);
@@ -198,7 +182,7 @@ public class CredentialsPreference extends DialogPreference
         if (value == AuthMethod.DEVICE) {
             KeyguardManager km = (KeyguardManager) getContext().getSystemService(KEYGUARD_SERVICE);
 
-            if (! km.isKeyguardSecure()) {
+            if (!km.isKeyguardSecure()) {
                 Toast.makeText(getContext(), R.string.settings_toast_auth_device_not_secure, Toast.LENGTH_LONG).show();
                 return;
             }
@@ -332,10 +316,12 @@ public class CredentialsPreference extends DialogPreference
 
     // Needed stub functions
     @Override
-    public void afterTextChanged(Editable s) {}
+    public void afterTextChanged(Editable s) {
+    }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
 
 
 }

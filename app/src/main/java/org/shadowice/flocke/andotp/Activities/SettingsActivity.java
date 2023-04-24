@@ -22,48 +22,32 @@
 
 package org.shadowice.flocke.andotp.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.backup.BackupManager;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-
-import android.view.View;
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-
+import android.preference.*;
 import android.provider.DocumentsContract;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewStub;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-
 import org.openintents.openpgp.util.OpenPgpAppPreference;
 import org.openintents.openpgp.util.OpenPgpKeyPreference;
 import org.shadowice.flocke.andotp.Preferences.CredentialsPreference;
 import org.shadowice.flocke.andotp.R;
 import org.shadowice.flocke.andotp.Tasks.ChangeEncryptionTask;
-import org.shadowice.flocke.andotp.Utilities.BackupHelper;
-import org.shadowice.flocke.andotp.Utilities.Constants;
-import org.shadowice.flocke.andotp.Utilities.DatabaseHelper;
-import org.shadowice.flocke.andotp.Utilities.EncryptionHelper;
-import org.shadowice.flocke.andotp.Utilities.KeyStoreHelper;
-import org.shadowice.flocke.andotp.Utilities.Settings;
-import org.shadowice.flocke.andotp.Utilities.UIHelper;
-
-import java.util.Locale;
+import org.shadowice.flocke.andotp.Utilities.*;
 
 import javax.crypto.SecretKey;
+import java.util.Locale;
 
 import static org.shadowice.flocke.andotp.Utilities.Constants.AuthMethod;
 import static org.shadowice.flocke.andotp.Utilities.Constants.EncryptionType;
@@ -270,6 +254,7 @@ public class SettingsActivity extends BackgroundTaskActivity<ChangeEncryptionTas
         startActivityForResult(intent, Constants.INTENT_SETTINGS_BACKUP_LOCATION);
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

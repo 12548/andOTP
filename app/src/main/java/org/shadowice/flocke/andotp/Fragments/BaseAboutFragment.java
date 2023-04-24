@@ -1,18 +1,11 @@
 package org.shadowice.flocke.andotp.Fragments;
 
-import android.app.AlertDialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.ColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 import org.shadowice.flocke.andotp.R;
 import org.shadowice.flocke.andotp.Utilities.Settings;
 import org.shadowice.flocke.andotp.Utilities.Tools;
@@ -164,7 +159,7 @@ public class BaseAboutFragment extends Fragment {
             public void onClick(View view) {
                 try {
                     openURI(AUTHOR_ORIGINAL_EXTRA);
-                } catch(Exception ignored) {
+                } catch (Exception ignored) {
                     copyToClipboard(AUTHOR_ORIGINAL_EXTRA);
                 }
             }
@@ -202,7 +197,8 @@ public class BaseAboutFragment extends Fragment {
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {}
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
                 })
                 .create()
                 .show();

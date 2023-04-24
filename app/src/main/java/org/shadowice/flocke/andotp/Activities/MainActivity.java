@@ -24,7 +24,6 @@
 package org.shadowice.flocke.andotp.Activities;
 
 import android.animation.ObjectAnimator;
-import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,61 +34,43 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-
+import android.provider.Settings;
+import android.text.TextUtils;
+import android.view.*;
+import android.view.animation.LinearInterpolator;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.ItemTouchHelper;
-
-import android.provider.Settings;
-import android.text.TextUtils;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.view.animation.LinearInterpolator;
-import android.widget.CheckedTextView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.leinardi.android.speeddial.SpeedDialView;
-
 import org.shadowice.flocke.andotp.Database.Entry;
 import org.shadowice.flocke.andotp.Dialogs.HideableDialog;
+import org.shadowice.flocke.andotp.Dialogs.ManualEntryDialog;
 import org.shadowice.flocke.andotp.R;
-import org.shadowice.flocke.andotp.Utilities.Constants;
-import org.shadowice.flocke.andotp.Utilities.EncryptionHelper;
-import org.shadowice.flocke.andotp.Utilities.KeyStoreHelper;
-import org.shadowice.flocke.andotp.Utilities.NotificationHelper;
-import org.shadowice.flocke.andotp.Utilities.ScanQRCodeFromFile;
-import org.shadowice.flocke.andotp.Utilities.TokenCalculator;
+import org.shadowice.flocke.andotp.Utilities.*;
 import org.shadowice.flocke.andotp.View.EntriesCardAdapter;
 import org.shadowice.flocke.andotp.View.ItemTouchHelper.SimpleItemTouchHelperCallback;
-import org.shadowice.flocke.andotp.Dialogs.ManualEntryDialog;
 import org.shadowice.flocke.andotp.View.TagsAdapter;
 
+import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.crypto.SecretKey;
-
-import static org.shadowice.flocke.andotp.Utilities.Constants.AuthMethod;
-import static org.shadowice.flocke.andotp.Utilities.Constants.EncryptionType;
-import static org.shadowice.flocke.andotp.Utilities.Constants.SortMode;
+import static org.shadowice.flocke.andotp.Utilities.Constants.*;
 
 public class MainActivity extends BaseActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -126,7 +107,7 @@ public class MainActivity extends BaseActivity
     private TextView emptyListView;
 
     // QR code scanning
-    private void scanQRCode(){
+    private void scanQRCode() {
         new IntentIntegrator(MainActivity.this)
                 .setOrientationLocked(false)
                 .setBeepEnabled(false)
@@ -196,7 +177,7 @@ public class MainActivity extends BaseActivity
 
         setTitle(R.string.app_name);
 
-        if (! settings.getScreenshotsEnabled())
+        if (!settings.getScreenshotsEnabled())
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         setContentView(R.layout.activity_main);
@@ -343,8 +324,7 @@ public class MainActivity extends BaseActivity
         });
 
         handler = new Handler(Looper.getMainLooper());
-        handlerTask = new Runnable()
-        {
+        handlerTask = new Runnable() {
             @Override
             public void run() {
                 if (!settings.isHideGlobalTimeoutEnabled()) {
@@ -449,7 +429,7 @@ public class MainActivity extends BaseActivity
         }
 
         View cardList = findViewById(R.id.cardList);
-        if(cardList.getVisibility() == View.INVISIBLE)
+        if (cardList.getVisibility() == View.INVISIBLE)
             cardList.setVisibility(View.VISIBLE);
 
         startUpdater();
@@ -457,7 +437,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onPause() {
-        if(settings.getAuthMethod() == AuthMethod.DEVICE)
+        if (settings.getAuthMethod() == AuthMethod.DEVICE)
             runOnUiThread(() -> findViewById(R.id.cardList).setVisibility(View.INVISIBLE));
         super.onPause();
         stopUpdater();
@@ -514,8 +494,8 @@ public class MainActivity extends BaseActivity
         super.onActivityResult(requestCode, resultCode, intent);
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if(result != null) {
-            if(result.getContents() != null) {
+        if (result != null) {
+            if (result.getContents() != null) {
                 addQRCode(result.getContents());
             }
         } else if (requestCode == Constants.INTENT_MAIN_BACKUP && resultCode == RESULT_OK) {
@@ -563,7 +543,7 @@ public class MainActivity extends BaseActivity
             if (setupFinished) {
                 requireAuthentication = false;
 
-                byte [] encryptionKey = intent.getByteArrayExtra(Constants.EXTRA_INTRO_ENCRYPTION_KEY);
+                byte[] encryptionKey = intent.getByteArrayExtra(Constants.EXTRA_INTRO_ENCRYPTION_KEY);
                 updateEncryption(encryptionKey);
 
                 afterAuthentication();
@@ -623,7 +603,7 @@ public class MainActivity extends BaseActivity
         }
 
         searchMenu = menu.findItem(R.id.menu_search);
-        SearchView searchView = (SearchView) searchMenu.getActionView();
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenu);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -637,7 +617,7 @@ public class MainActivity extends BaseActivity
             }
         });
 
-        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+        MenuItemCompat.setOnActionExpandListener(searchMenu, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
                 speedDial.setVisibility(View.GONE);
@@ -662,7 +642,7 @@ public class MainActivity extends BaseActivity
         });
 
         if (focusSearchOnCreate) {
-            searchMenu.expandActionView();
+            MenuItemCompat.expandActionView(searchMenu);
             focusSearchOnCreate = false;
         }
 
@@ -671,7 +651,7 @@ public class MainActivity extends BaseActivity
 
     private void focusSearchMenu() {
         if (searchMenu != null)
-            searchMenu.expandActionView();
+            MenuItemCompat.expandActionView(searchMenu);
         else
             focusSearchOnCreate = true;
     }
@@ -698,7 +678,7 @@ public class MainActivity extends BaseActivity
             if (adapter.getEncryptionKey() != null)
                 settingsIntent.putExtra(Constants.EXTRA_SETTINGS_ENCRYPTION_KEY, adapter.getEncryptionKey().getEncoded());
             startActivityForResult(settingsIntent, Constants.INTENT_MAIN_SETTINGS);
-        } else if (id == R.id.action_about){
+        } else if (id == R.id.action_about) {
             Intent aboutIntent = new Intent(this, AboutActivity.class);
             startActivity(aboutIntent);
             return true;
@@ -714,7 +694,7 @@ public class MainActivity extends BaseActivity
             item.setChecked(true);
             sortMenu.setIcon(R.drawable.ic_sort_inverted_label_white);
             saveSortMode(SortMode.ISSUER);
-            if(adapter != null) {
+            if (adapter != null) {
                 adapter.setSortMode(SortMode.ISSUER);
                 touchHelperCallback.setDragEnabled(false);
             }
@@ -734,7 +714,7 @@ public class MainActivity extends BaseActivity
                 adapter.setSortMode(SortMode.LAST_USED);
                 touchHelperCallback.setDragEnabled(false);
             }
-            if (! settings.getUsedTokensDialogShown())
+            if (!settings.getUsedTokensDialogShown())
                 showUsedTokensDialog();
         } else if (id == R.id.menu_sort_most_used) {
             item.setChecked(true);
@@ -744,7 +724,7 @@ public class MainActivity extends BaseActivity
                 adapter.setSortMode(SortMode.MOST_USED);
                 touchHelperCallback.setDragEnabled(false);
             }
-            if (! settings.getUsedTokensDialogShown())
+            if (!settings.getUsedTokensDialogShown())
                 showUsedTokensDialog();
         } else if (tagsToggle.onOptionsItemSelected(item)) {
             return true;
@@ -795,22 +775,22 @@ public class MainActivity extends BaseActivity
         final CheckedTextView allTagsButton = findViewById(R.id.all_tags_in_drawer);
 
         allTagsButton.setOnClickListener(view -> {
-            CheckedTextView checkedTextView = ((CheckedTextView)view);
+            CheckedTextView checkedTextView = ((CheckedTextView) view);
             checkedTextView.setChecked(!checkedTextView.isChecked());
 
             settings.setAllTagsToggle(checkedTextView.isChecked());
 
-            for(int i = 0; i < tagsDrawerListView.getChildCount(); i++) {
+            for (int i = 0; i < tagsDrawerListView.getChildCount(); i++) {
                 CheckedTextView childCheckBox = (CheckedTextView) tagsDrawerListView.getChildAt(i);
                 childCheckBox.setChecked(checkedTextView.isChecked());
             }
 
-            for (String tag: tagsDrawerAdapter.getTags()) {
+            for (String tag : tagsDrawerAdapter.getTags()) {
                 tagsDrawerAdapter.setTagState(tag, checkedTextView.isChecked());
                 settings.setTagToggle(tag, checkedTextView.isChecked());
             }
 
-            if(checkedTextView.isChecked()) {
+            if (checkedTextView.isChecked()) {
                 adapter.filterByTags(tagsDrawerAdapter.getActiveTags());
             } else {
                 adapter.filterByTags(new ArrayList<>());
@@ -819,15 +799,15 @@ public class MainActivity extends BaseActivity
         allTagsButton.setChecked(settings.getAllTagsToggle());
 
         noTagsButton.setOnClickListener(view -> {
-            CheckedTextView checkedTextView = ((CheckedTextView)view);
+            CheckedTextView checkedTextView = ((CheckedTextView) view);
             checkedTextView.setChecked(!checkedTextView.isChecked());
 
-            if(settings.getTagFunctionality() == Constants.TagFunctionality.SINGLE) {
+            if (settings.getTagFunctionality() == Constants.TagFunctionality.SINGLE) {
                 checkedTextView.setChecked(true);
                 allTagsButton.setChecked(false);
                 settings.setAllTagsToggle(false);
 
-                for (String tag: tagsDrawerAdapter.getTags()) {
+                for (String tag : tagsDrawerAdapter.getTags()) {
                     settings.setTagToggle(tag, false);
                     tagsDrawerAdapter.setTagState(tag, false);
                 }
@@ -840,27 +820,27 @@ public class MainActivity extends BaseActivity
 
         tagsDrawerListView.setAdapter(tagsDrawerAdapter);
         tagsDrawerListView.setOnItemClickListener((parent, view, position, id) -> {
-            CheckedTextView checkedTextView = ((CheckedTextView)view);
+            CheckedTextView checkedTextView = ((CheckedTextView) view);
 
-            if(settings.getTagFunctionality() == Constants.TagFunctionality.SINGLE) {
+            if (settings.getTagFunctionality() == Constants.TagFunctionality.SINGLE) {
                 allTagsButton.setChecked(false);
                 settings.setAllTagsToggle(false);
                 noTagsButton.setChecked(false);
                 settings.setNoTagsToggle(false);
 
-                for (String tag: tagsDrawerAdapter.getTags()) {
+                for (String tag : tagsDrawerAdapter.getTags()) {
                     settings.setTagToggle(tag, false);
                     tagsDrawerAdapter.setTagState(tag, false);
                 }
                 checkedTextView.setChecked(true);
-            }else {
+            } else {
                 checkedTextView.setChecked(!checkedTextView.isChecked());
             }
 
             settings.setTagToggle(checkedTextView.getText().toString(), checkedTextView.isChecked());
             tagsDrawerAdapter.setTagState(checkedTextView.getText().toString(), checkedTextView.isChecked());
 
-            if (! checkedTextView.isChecked()) {
+            if (!checkedTextView.isChecked()) {
                 allTagsButton.setChecked(false);
                 settings.setAllTagsToggle(false);
             }
@@ -878,14 +858,14 @@ public class MainActivity extends BaseActivity
 
     public void refreshTags() {
         HashMap<String, Boolean> tagsHashMap = new HashMap<>();
-        for(String tag: tagsDrawerAdapter.getTags()) {
+        for (String tag : tagsDrawerAdapter.getTags()) {
             tagsHashMap.put(tag, false);
         }
-        for(String tag: tagsDrawerAdapter.getActiveTags()) {
+        for (String tag : tagsDrawerAdapter.getActiveTags()) {
             tagsHashMap.put(tag, true);
         }
-        for(String tag: adapter.getTags()) {
-            if(!tagsHashMap.containsKey(tag))
+        for (String tag : adapter.getTags()) {
+            if (!tagsHashMap.containsKey(tag))
                 tagsHashMap.put(tag, true);
         }
         tagsDrawerAdapter.setTags(tagsHashMap);
@@ -893,7 +873,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onUserInteraction(){
+    public void onUserInteraction() {
         super.onUserInteraction();
 
         // Refresh Blackout Timer
@@ -926,15 +906,15 @@ public class MainActivity extends BaseActivity
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void showOpenFileSelector(int intentId){
+    private void showOpenFileSelector(int intentId) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
         startActivityForResult(intent, intentId);
     }
-    
-    private void addQRCode(String result){
-        if(!TextUtils.isEmpty(result)) {
+
+    private void addQRCode(String result) {
+        if (!TextUtils.isEmpty(result)) {
             try {
                 Entry e = new Entry(result);
                 e.updateOTP(false);
@@ -983,8 +963,8 @@ public class MainActivity extends BaseActivity
     /**
      * This function will hide the progress bar if the token list is empty along with
      * showing a view which has instruction on how to add the tokens
-     * */
-    private void hideProgressBar(){
+     */
+    private void hideProgressBar() {
         int itemCount = adapter.getItemCount();
         progressBar.setVisibility((settings.isHideGlobalTimeoutEnabled() || itemCount <= 0) ? View.GONE : View.VISIBLE);
         emptyListView.setVisibility(itemCount > 0 ? View.GONE : View.VISIBLE);

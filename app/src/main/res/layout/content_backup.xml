@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,7 +25,7 @@
                 android:textColor="@color/colorAccent"
                 android:textStyle="bold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.TextView.SpinnerItem"
-                android:text="@string/backup_label_type"/>
+                android:text="@string/backup_label_type" />
 
             <Spinner
                 android:id="@+id/backupType"
@@ -42,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_margin"
             android:padding="@dimen/activity_margin"
-            android:text="@string/backup_label_warning_plain"/>
+            android:text="@string/backup_label_warning_plain" />
 
         <TextView
             android:id="@+id/backupErrorLabel"
@@ -51,13 +50,13 @@
             android:padding="@dimen/activity_margin"
             android:textColor="?attr/colorExpiring"
             android:text="@string/backup_desc_openpgp_provider"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/buttonBackup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/backup_button_backup"/>
+            android:text="@string/backup_button_backup" />
 
         <ProgressBar
             android:id="@+id/progressBarBackup"
@@ -66,7 +65,7 @@
             android:layout_marginTop="@dimen/activity_margin"
             android:indeterminate="true"
             style="?android:attr/progressBarStyle"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <RelativeLayout
             android:orientation="horizontal"
@@ -75,26 +74,26 @@
             android:layout_marginTop="@dimen/activity_margin_large"
             android:layout_marginBottom="@dimen/activity_margin"
             android:padding="@dimen/activity_margin"
-            android:background="?android:attr/selectableItemBackground" >
+            android:background="?attr/selectableItemBackground">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/backup_replace" >
+                android:layout_toStartOf="@id/backup_replace">
 
                 <TextView
                     android:id="@+id/backup_replace_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/backup_title_replace"
-                    android:textAppearance="?android:attr/textAppearanceListItem" />
+                    android:textAppearance="?attr/textAppearanceListItem" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/backup_desc_replace"/>
+                    android:text="@string/backup_desc_replace" />
 
             </LinearLayout>
 
@@ -130,7 +129,7 @@
             android:layout_marginTop="@dimen/activity_margin"
             android:indeterminate="true"
             style="?android:attr/progressBarStyle"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 

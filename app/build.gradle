@@ -69,6 +69,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.preference:preference:1.2.0'
     implementation "androidx.lifecycle:lifecycle-process:${lifecycle_version}"
     implementation "androidx.lifecycle:lifecycle-runtime:${lifecycle_version}"
     implementation "androidx.lifecycle:lifecycle-common-java8:${lifecycle_version}"

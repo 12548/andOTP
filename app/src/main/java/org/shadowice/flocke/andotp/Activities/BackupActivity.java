@@ -22,30 +22,20 @@
 
 package org.shadowice.flocke.andotp.Activities;
 
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.Toolbar;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-
 import org.openintents.openpgp.OpenPgpError;
 import org.openintents.openpgp.OpenPgpSignatureResult;
 import org.openintents.openpgp.util.OpenPgpApi;
@@ -53,27 +43,15 @@ import org.openintents.openpgp.util.OpenPgpServiceConnection;
 import org.shadowice.flocke.andotp.Database.Entry;
 import org.shadowice.flocke.andotp.Dialogs.PasswordEntryDialog;
 import org.shadowice.flocke.andotp.R;
-import org.shadowice.flocke.andotp.Tasks.BackupTaskResult;
-import org.shadowice.flocke.andotp.Tasks.EncryptedBackupTask;
-import org.shadowice.flocke.andotp.Tasks.EncryptedRestoreTask;
-import org.shadowice.flocke.andotp.Tasks.PGPBackupTask;
-import org.shadowice.flocke.andotp.Tasks.PGPRestoreTask;
-import org.shadowice.flocke.andotp.Tasks.PlainTextBackupTask;
-import org.shadowice.flocke.andotp.Tasks.PlainTextRestoreTask;
-import org.shadowice.flocke.andotp.Tasks.UiBasedBackgroundTask;
-import org.shadowice.flocke.andotp.Utilities.BackupHelper;
-import org.shadowice.flocke.andotp.Utilities.Constants;
-import org.shadowice.flocke.andotp.Utilities.DatabaseHelper;
-import org.shadowice.flocke.andotp.Utilities.EncryptionHelper;
-import org.shadowice.flocke.andotp.Utilities.Tools;
+import org.shadowice.flocke.andotp.Tasks.*;
+import org.shadowice.flocke.andotp.Utilities.*;
 
+import javax.crypto.SecretKey;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-
-import javax.crypto.SecretKey;
 
 public class BackupActivity extends BackgroundTaskActivity<BackupTaskResult> {
     private final static String TAG = BackupActivity.class.getSimpleName();
@@ -140,7 +118,8 @@ public class BackupActivity extends BackgroundTaskActivity<BackupTaskResult> {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         });
 
         btnBackup.setOnClickListener(view -> {
@@ -211,7 +190,7 @@ public class BackupActivity extends BackgroundTaskActivity<BackupTaskResult> {
 
                     btnBackup.setEnabled(false);
                     btnRestore.setEnabled(false);
-                } else if (TextUtils.isEmpty(pgpEncryptionUserIDs)){
+                } else if (TextUtils.isEmpty(pgpEncryptionUserIDs)) {
                     txtBackupWarning.setText(R.string.backup_desc_openpgp_keyid);
                     txtBackupWarning.setVisibility(View.VISIBLE);
 
@@ -283,11 +262,10 @@ public class BackupActivity extends BackgroundTaskActivity<BackupTaskResult> {
     private void handleBackupTaskResult(BackupTaskResult result) {
         if (result.messageId != 0)
             notifyBackupState(result.messageId);
+        else if (result.success)
+            notifyBackupState(R.string.backup_toast_export_success);
         else
-            if (result.success)
-                notifyBackupState(R.string.backup_toast_export_success);
-            else
-                notifyBackupState(R.string.backup_toast_export_failed);
+            notifyBackupState(R.string.backup_toast_export_failed);
 
         if (result.success)
             finishWithResult();
@@ -437,7 +415,7 @@ public class BackupActivity extends BackgroundTaskActivity<BackupTaskResult> {
         ArrayList<Entry> entries = DatabaseHelper.stringToEntries(text);
 
         if (entries.size() > 0) {
-            if (! swReplace.isChecked()) {
+            if (!swReplace.isChecked()) {
                 ArrayList<Entry> currentEntries = DatabaseHelper.loadDatabase(this, encryptionKey);
 
                 entries.removeAll(currentEntries);
@@ -486,7 +464,8 @@ public class BackupActivity extends BackgroundTaskActivity<BackupTaskResult> {
         builder.setTitle(R.string.backup_dialog_title_security_warning)
                 .setMessage(R.string.backup_dialog_msg_export_warning)
                 .setPositiveButton(R.string.yes, (dialogInterface, i) -> showSaveFileSelector(Constants.BACKUP_MIMETYPE_PLAIN, Constants.BackupType.PLAIN_TEXT, Constants.INTENT_BACKUP_SAVE_DOCUMENT_PLAIN))
-                .setNegativeButton(R.string.no, (dialogInterface, i) -> {})
+                .setNegativeButton(R.string.no, (dialogInterface, i) -> {
+                })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .create()
                 .show();

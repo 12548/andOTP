@@ -27,30 +27,24 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.preference.DialogPreference;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import org.shadowice.flocke.andotp.R;
-import org.shadowice.flocke.andotp.Utilities.ConfirmedPasswordTransformationHelper;
-import org.shadowice.flocke.andotp.Utilities.Constants;
-import org.shadowice.flocke.andotp.Utilities.EncryptionHelper;
-import org.shadowice.flocke.andotp.Utilities.KeyStoreHelper;
-import org.shadowice.flocke.andotp.Utilities.Settings;
+import org.shadowice.flocke.andotp.Utilities.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 
 public class PasswordEncryptedPreference extends DialogPreference
-    implements View.OnClickListener, TextWatcher {
+        implements View.OnClickListener, TextWatcher {
 
     public enum Mode {
         PASSWORD, PIN
@@ -118,7 +112,7 @@ public class PasswordEncryptedPreference extends DialogPreference
         btnCancel.setOnClickListener(this);
         btnSave.setOnClickListener(this);
 
-        if (! value.isEmpty()) {
+        if (!value.isEmpty()) {
             passwordInput.setText(value);
         }
 
@@ -204,8 +198,10 @@ public class PasswordEncryptedPreference extends DialogPreference
     }
 
     @Override
-    public void afterTextChanged(Editable s) {}
+    public void afterTextChanged(Editable s) {
+    }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
 }
